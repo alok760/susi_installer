@@ -461,6 +461,7 @@ function install_seeed_voicecard_driver()
     tar -czf ~/seeed-voicecard.tar.gz seeed-voicecard
     rm -rf seeed-voicecard
     sudo apt install pulseaudio
+    echo "load-module module-alsa-sink device=hw:2,1" >> /etc/pulse/default.pa
     if [ $CLEAN = 1 ] ; then
         sudo apt-get clean
     fi
