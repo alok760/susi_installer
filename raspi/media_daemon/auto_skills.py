@@ -5,10 +5,10 @@ import subprocess #nosec #pylint-disable type: ignore
 
 # To get media_daemon folder
 media_daemon_folder = os.path.dirname(os.path.abspath(__file__))
-base_folder = os.path.dirname(media_daemon_folder)
-server_skill_folder = os.path.join(base_folder, 'susi_server/susi_server/data/generic_skills/media_discovery')
-server_settings_folder = os.path.join(base_folder, 'susi_server/susi_server/data/settings')
-server_restart_script = os.path.join(base_folder, 'susi_server/susi_server/bin/restart.sh')
+base_folder = os.path.abspath(os.path.join(__file__ ,"../../../.."))
+server_skill_folder = os.path.join(base_folder, 'susi_server/data/generic_skills/media_discovery')
+server_settings_folder = os.path.join(base_folder, 'susi_server/data/settings')
+server_restart_script = os.path.join(base_folder, 'susi_server/bin/restart.sh')
 
 def list_media_devices():
     with open("/proc/partitions", "r") as f:
@@ -37,7 +37,10 @@ def make_skill(): # pylint-enable
     path = get_media_path(devices[0])
     subprocess.call(['udisksctl','mount','-b',path])  #nosec #pylint-disable type: ignore
     name_of_usb = get_mount_points()
-    usb = name_of_usb[1]
+    print(type(name_of_usb))
+    print(name_of_usb)
+    usb = "/media/usb0" #temporary
+    #usb = name_of_usb[0]
     mp3_files = glob(str(usb) + '/*.mp3')
     ogg_files = glob(str(usb) + '/*.ogg')
     flac_files = glob(str(usb) + '/*.flac')
@@ -54,6 +57,7 @@ def make_skill(): # pylint-enable
         music_path.append("{}".format(usb) + "/{}".format(wav))
     song_list = " ".join(music_path)
     skills = ['play audio','!console:Playing audio from your usb device','{"actions":[','{"type":"audio_play", "identifier_type":"url", "identifier":"file://'+str(song_list) +'"}',']}','eol']
+    print(skills)
     for skill in skills:
         f.write(skill + '\n')
     f.close()
@@ -78,4 +82,12 @@ def get_mount_points(devices=None):
     return [(info.split()[0], info.split()[2]) for info in usb_info]
 
 if __name__ == '__main__':
+    """
+    temporary
+    print(media_daemon_folder)
+    print(base_folder)
+    print(server_skill_folder)
+    print(server_settings_folder)
+    print(server_restart_script)
+    """
     make_skill()
