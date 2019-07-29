@@ -49,10 +49,10 @@ def access_mode():
 
 @app.before_request
 def before_request_callback():
-    if (request.endpoint == 'setup' or request.endpoint == 'auth'\
-     or request.endpoint == 'wifi_credentials' \
-     or request.endpoint == 'reboot') and not access_mode():
-        return redirect(url_for('control'))
+    if request.endpoint == 'control':
+        return redirect(url_for('setup'))
+    if request.endpoint != 'config' or request.endpoint != 'auth' or request.endpoint != 'wifi_credentials' or request.endpoint != 'speaker_config' or request.endpoint != 'reboot':
+        return status.HTTP_405_METHOD_NOT_ALLOWED
     if request.endpoint != 'login' and request.endpoint != 'static' and not\
        check_pass() and not session.get('logged_in') and request.remote_addr != '127.0.0.1':
         return render_template('login.html')
