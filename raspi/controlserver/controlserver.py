@@ -7,11 +7,13 @@ import json_config
 
 from flask import Flask , render_template , request, flash, redirect, session, abort, g, url_for
 from flask import jsonify
+from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
 
 # from vlcplayer import vlcplayer
 
 app = Flask(__name__)
+CORS(app)
 logger = logging.getLogger(__name__)
 
 logger = logging.getLogger(__name__)
